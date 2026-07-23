@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - "frontend/**"
-    
 
 permissions:
   id-token: write
@@ -46,6 +45,10 @@ jobs:
           image-ref: jerney-frontend:latest
           severity: HIGH,CRITICAL
           exit-code: "1"
+      - name: Print Github Information
+        run: |
+          echo "Repository = ${{ github.repository }}"
+          echo "Branch = ${{ github.ref }}"
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -66,7 +69,7 @@ jobs:
         run: |
             docker push \
             ${{ secrets.FRONTEND_ECR_URI }}:${{github.sha}}
-   
+
       - name: Update Kubernetes Manifest
         run: |
           sed -i \
