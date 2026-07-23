@@ -2,6 +2,8 @@ name: Backend CI Pipeline
 
 on:
   push:
+    branches:
+      - main
     paths:
       - "backend/**"
     
@@ -69,9 +71,7 @@ jobs:
    
       - name: Update Kubernetes Manifest
         run: |
-          sed -i \
-          "s|image:.*|image: ${{ secrets.BACKEND_ECR_URI }}:${{github.sha}}|"\
-          k8s/backend/deployment.yaml
+          sed -i "s#image:.*#image: ${{ secrets.BACKEND_ECR_URI }}:${{github.sha}}#" k8s/backend/deployment.yaml
 
       - name: Commit Manifest Changes
         run: |
