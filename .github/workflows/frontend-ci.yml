@@ -46,33 +46,7 @@ jobs:
         with:
           image-ref: jerney-frontend:latest
           severity: HIGH,CRITICAL
-          exit-code: "1"
-
-      - name: Print Github Information
-        run: |
-          echo "Repository = ${{ github.repository }}"
-          echo "Branch = ${{ github.ref }}"
-
-      - name: Print Github Context
-        run: |
-          echo "Repository=${{ github.repository }}"
-          echo "Ref=${{ github.ref }}"
-          echo "Actor=${{ github.actor }}"
-      - name: Print Role
-        run: |
-          echo "${{ secrets.AWS_ROLE_ARN }}"
-      - name: Dump Github Context
-        env:
-         GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-
-      - name: Print Event Information
-        run: |
-          echo "EVENT=${{ github.event_name }}"
-          echo "REF=${{ github.ref }}"
-          echo "REF_NAME=${{ github.ref_name }}"
-          echo "HEAD_REF=${{ github.head_ref }}"
-          echo "BASE_REF=${{ github.base_ref }}"     
+          exit-code: "1"    
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4

@@ -12,35 +12,36 @@ resource "aws_iam_role" "github_actions" {
 
 # Step 3 - Trust Policy
 data "aws_iam_policy_document" "github_assume_role" {
-    statement {
-      actions = [
-        "sts:AssumeRoleWithWebIdentity"
-      ]
+  statement {
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
 
-      principals {
-        type = "Federated"
-        identifiers = [
-            data.aws_iam_openid_connect_provider.github.arn
-        ]
-      }
-
-      condition {
-        test = "StringEquals"
-        variable = "token.actions.githubusercontent.com:aud"
-        values = [
-            "sts.amazonaws.com"
-        ]
-      }
-
-      condition {
-        test = "StringEquals"
-        variable = "token.actions.githubusercontent.com:sub"
-        values = [
-           "repo:${var.github_repository}:ref:refs/heads/${var.github_branch}"
-         ]
-      }
+    principals {
+      type        = "Federated"
+      identifiers = [data.aws_iam_openid_connect_provider.github.arn]
     }
-}
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+
+    # CHANGE THIS BLOCK
+    condition {
+      test     = "StringLike" # Changed from StringEquals to allow wildcards
+      variable = "token.actions.githubusercontent.com:sub"
+      values = [
+        # Matches NEW repos (with immutable IDs): repo:org@123/repo@456:ref:refs/heads/main
+        "repo:${var.github_repository}@*/*@*:ref:refs/heads/${var.github_branch}",
+        
+        # Matches OLD repos (legacy names): repo:org/repo:ref:refs/heads/main
+        "repo:${var.github_repository}:ref:refs/heads/${var.github_branch}"
+      ]
+    }
+  }
+}   
 
 # Step 4 - IAM Permissions Policy
 data "aws_iam_policy_document" "ecr_permissions" {
