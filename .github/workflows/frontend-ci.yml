@@ -63,16 +63,16 @@ jobs:
           echo "${{ secrets.AWS_ROLE_ARN }}"
       - name: Dump Github Context
         env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
+         GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
       - name: Print Event Information
-  run: |
-    echo "EVENT=${{ github.event_name }}"
-    echo "REF=${{ github.ref }}"
-    echo "REF_NAME=${{ github.ref_name }}"
-    echo "HEAD_REF=${{ github.head_ref }}"
-    echo "BASE_REF=${{ github.base_ref }}"
+        run: |
+          echo "EVENT=${{ github.event_name }}"
+          echo "REF=${{ github.ref }}"
+          echo "REF_NAME=${{ github.ref_name }}"
+          echo "HEAD_REF=${{ github.head_ref }}"
+          echo "BASE_REF=${{ github.base_ref }}"
 
       - name: Debug OIDC Claims
         uses: github/actions-oidc-debugger@main      
