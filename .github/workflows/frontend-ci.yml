@@ -32,7 +32,7 @@ jobs:
 
       - name: Run Dependency Scan
         working-directory: ./frontend
-        run: npm run audit --audit-level=high
+        run: npm audit --audit-level=high
 
       - name: Build Frontend Docker Image
         run: |
