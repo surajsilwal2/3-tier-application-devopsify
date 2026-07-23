@@ -47,7 +47,7 @@ function Home() {
         <div className="empty-state">
           <div className="empty-emoji">📝</div>
           <h3>No posts yet, bestie</h3>
-          <p>Be the first to share your thoughts on this journey</p>
+          <p>Be the first one to share your thoughts on this journey</p>
           <Link to="/create" className="btn btn-primary">
             <HiPlus size={18} />
             Write something...
