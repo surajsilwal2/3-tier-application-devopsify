@@ -41,7 +41,7 @@ jobs:
           ./frontend
 
       - name: Scan Frontend Docker Image
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@0.36.1
         with:
           image-ref: jerney-frontend:latest
           severity: HIGH,CRITICAL
