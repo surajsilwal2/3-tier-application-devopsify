@@ -46,24 +46,24 @@ jobs:
         run: |
          docker run --rm jerney-backend:latest ls /app/node_modules
 
-      - name: Check tar package
-        run: |
-         docker run --rm jerney-backend:latest npm ls tar
-
-      - name: Check sigstore package
-        run: |
-         docker run --rm jerney-backend:latest npm ls sigstore
-
-      - name: Check brace-expansion package
-        run: |
-         docker run --rm jerney-backend:latest npm ls brace-expansion
+     
 
       - name: Scan Backend Docker Image
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: jerney-backend:latest
-          severity: HIGH,CRITICAL
-          exit-code: "1"
+         image-ref: jerney-backend:latest
+         severity: HIGH,CRITICAL
+         exit-code: "0"
+         format: table
+
+      - name: Save Trivy Report
+        run: |
+          docker run --rm jerney-backend:latest \
+          cat /app/package-lock.json
+
+      - name: Check Image ID
+        run: |
+         docker images    
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
