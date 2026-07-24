@@ -36,25 +36,38 @@ jobs:
         working-directory: ./backend
         run: npm audit --audit-level=high
 
+      - name: Remove old image
+        run: |
+          docker rmi jerney-backend:latest || true
+
       - name: Build Backend Docker Image
         run: |
           docker build \
+          --no-cache \
           -t jerney-backend:latest \
           ./backend
 
-      - name: Check Docker Image
+      - name: Show image history
         run: |
-         docker run --rm jerney-backend:latest ls /app/node_modules
+           docker history jerney-backend:latest    
 
-     
+      - name: Inspect image
+        run: |
+         docker inspect jerney-backend:latest
+
+      - name: Check packages
+        run: |
+          docker run --rm \
+          jerney-backend:latest \
+          npm ls --depth=0
 
       - name: Scan Backend Docker Image
         uses: aquasecurity/trivy-action@v0.36.0
         with:
          image-ref: jerney-backend:latest
          severity: HIGH,CRITICAL
-         exit-code: "0"
-         format: table
+         exit-code: "1"
+         ignore-unfixed: false
 
       - name: Save Trivy Report
         run: |
