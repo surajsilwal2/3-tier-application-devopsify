@@ -47,21 +47,28 @@ jobs:
           -t jerney-backend:latest \
           ./backend
 
-      - name: Scan Backend Docker Image (debug)
+      - name: Check Docker Image
+        run: |
+         docker run --rm jerney-backend:latest ls /app/node_modules
+
+     
+
+      - name: Scan Backend Docker Image
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: jerney-backend:latest
-          severity: HIGH,CRITICAL
-          format: json
-          output: trivy-results.json
-          ignore-unfixed: true
+         image-ref: jerney-backend:latest
+         severity: HIGH,CRITICAL
+         exit-code: "0"
+         format: table
 
-      - name: Upload Trivy results
-        uses: actions/upload-artifact@v4
-        with:
-         name: trivy-results
-         path: trivy-results.json
+      - name: Save Trivy Report
+        run: |
+          docker run --rm jerney-backend:latest \
+          cat /app/package-lock.json
 
+      - name: Check Image ID
+        run: |
+         docker images    
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
